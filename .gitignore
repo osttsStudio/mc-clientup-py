@@ -1,0 +1,7 @@
+*.exe
+*.zip
+mc_clientup.py
+hmcl.json
+/build
+/__pycache__
+/dist
