@@ -64,6 +64,8 @@ if Ver_local == Ver_server:
 
 if Ver_local < Ver_server:
 
+    print("Downloading...Please wait.")
+
     def get_data():
         Zip_url = "http://xxx/xxx.zip" # update file url
         response = requests.get(Zip_url)
@@ -87,5 +89,5 @@ if Ver_local < Ver_server:
 time.sleep(2)
 os.remove('config_new.ini')
 os.system('client.exe')
-os.system(bat_res)
+os.system('resourcepacks.exe')
 sys.exit(0)

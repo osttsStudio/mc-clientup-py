@@ -1,5 +1,6 @@
-*.exe
+mc_clientup.py
 *.zip
+*.bak
 mc_clientup.py
 hmcl.json
 /build
