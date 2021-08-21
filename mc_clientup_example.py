@@ -1,7 +1,7 @@
 # ====================================================
 
 # Author:狐日泽
-# Version:0.1.9
+# Version:0.2.0
 # name:mc_clientup_py
 
 # 基于python3的简单粗暴mc客户端自动更新程序
@@ -40,35 +40,41 @@ con = ConfigParser()
 con_path = os.path.join(os.path.abspath('.'),'config.ini') # config.ini--local config file name
 con.read(con_path)
 Ver_local = con.get('ver','version')
+Mc_local = con.get('ver','mc_version')
 
 # load server config
 con_server = ConfigParser()
 con_serverpath = os.path.join(os.path.abspath('.'),'config_new.ini') # config_new.ini--server config file name
 con_server.read(con_serverpath)
 Ver_server = con_server.get('ver','version')
+Mc_server = con_server.get('ver','mc_version')
 
 # config.ini does not exist
 if not os.path.exists(con_path):
     print("\033[1;31;40mFile config.ini does not exist,please re-download.url:none\033[0m")
     input("Press Enter to exit.")
     os.remove('config_new.ini')
+    os.remove('version.txt')
     sys.exit(1)
 
 if Ver_local > Ver_server:
     print("\033[1;31;40mThe version is wrong,please re-dowoload. url:none\033[0m")
     input("Press Enter to exit.")
     os.remove('config_new.ini')
+    os.remove('version.txt')
     sys.exit(1)
 
 if Ver_local == Ver_server:
     os.system('client.exe')
     os.remove('config_new.ini')
+    os.remove('version.txt')
     sys.exit(0)
 
 if Ver_local < Ver_server:
 
     with open(r"version.txt", encoding="utf-8") as file:
         print(file.read())
+        print(f"目前版本：{Mc_local}  最新版本：{Mc_server}")
         print("\033[5;36;40mDownloading...Please wait.\033[0m")
 
     def get_data():
