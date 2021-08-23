@@ -1,7 +1,7 @@
 # ====================================================
 
 # Author:狐日泽
-# Version:0.2.0
+# Version:0.2.3
 # name:mc_clientup_py
 
 # 基于python3的简单粗暴mc客户端自动更新程序
@@ -26,11 +26,12 @@ from configparser import ConfigParser
 os.system("") # fixd print's color bug in Win10
 
 Con_res = os.getcwd() + "./config_new.ini" # config_new.ini--server config file name
-Zip_res = os.getcwd() + "./xxx.zip" # update file name
 bat_res = os.getcwd() + "/.minecraft/update.bat" # a bat file for updating itself and config, and supports deleting unnecessary files
 Ver_res = os.getcwd() + "./version.txt" # update logs name
+Client_res = os.getcwd() + "./client.ini" # launcher name file
 Ver_url = "http://xxx/xxx.txt" # update logs
 Con_url = "http://xxx/xxx.ini" # config file url
+Client_url = "http://chii.tpmc.top/client.ini" # launcher name file url
 
 request.urlretrieve(Con_url,Con_res)  # download server config file
 request.urlretrieve(Ver_url,Ver_res)  # download update logs
@@ -49,6 +50,22 @@ con_server.read(con_serverpath)
 Ver_server = con_server.get('ver','version')
 Mc_server = con_server.get('ver','mc_version')
 
+if not os.path.exists(Client_res):
+    request.urlretrieve(Client_url,Client_res)  # download launcher name file
+    print("""
+client.ini下载成功，如启动器名称不是默认的client.exe请修改client.ini文件后重新运行。
+The client.ini download is successful, if the launcher name is not the default：client.exe, please modify the client.ini file and run again.""")
+    input("Press Enter to exit.")
+    os.remove('version.txt')
+    os.remove('config_new.ini')
+    sys.exit(0)
+
+# launcher name config
+Client_ini = ConfigParser()
+Client_path = os.path.join(os.path.abspath('.'),'client.ini') # client.ini--launcher name file
+Client_ini.read(Client_path)
+Client = Client_ini.get('setting','name')
+
 # config.ini does not exist
 if not os.path.exists(con_path):
     print("\033[1;31;40mFile config.ini does not exist,please re-download.url:none\033[0m")
@@ -58,16 +75,17 @@ if not os.path.exists(con_path):
     sys.exit(1)
 
 if int(Ver_local) == int(Ver_server):
-    os.system('client.exe')
-    os.remove('config_new.ini')
+    os.system(Client)
     os.remove('version.txt')
+    os.remove('config_new.ini')
     sys.exit(0)
 
 if int(Ver_local) < int(Ver_server):
 
     with open(r"version.txt", encoding="utf-8") as file:
         print(file.read())
-        print(f"目前版本：{Mc_local}  最新版本：{Mc_server}")
+        print('更新程序版本：0.2.3')
+        print(f"目前MC版本：{Mc_local}  最新MC版本：{Mc_server}")
         print("\033[5;36;40mDownloading...Please wait.\033[0m")
 
     def get_data():
@@ -90,9 +108,9 @@ if int(Ver_local) < int(Ver_server):
     
     time.sleep(2)
     os.remove('version.txt')
-    os.remove('config_new.ini')
-    os.system('client.exe')
     os.system('resourcepacks.exe')
+    os.system(Client)
+    os.remove('config_new.ini')
     sys.exit(0)
 
 if int(Ver_local) > int(Ver_server):
