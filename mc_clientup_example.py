@@ -57,20 +57,13 @@ if not os.path.exists(con_path):
     os.remove('version.txt')
     sys.exit(1)
 
-if Ver_local > Ver_server:
-    print("\033[1;31;40mThe version is wrong,please re-dowoload. url:none\033[0m")
-    input("Press Enter to exit.")
-    os.remove('config_new.ini')
-    os.remove('version.txt')
-    sys.exit(1)
-
-if Ver_local == Ver_server:
+if int(Ver_local) == int(Ver_server):
     os.system('client.exe')
     os.remove('config_new.ini')
     os.remove('version.txt')
     sys.exit(0)
 
-if Ver_local < Ver_server:
+if int(Ver_local) < int(Ver_server):
 
     with open(r"version.txt", encoding="utf-8") as file:
         print(file.read())
@@ -78,11 +71,10 @@ if Ver_local < Ver_server:
         print("\033[5;36;40mDownloading...Please wait.\033[0m")
 
     def get_data():
-        Zip_url = "http://xxx/xxx.zip" # update file url
+        Zip_url = "http://xxx/xxx.zip"
         response = requests.get(Zip_url)
         return Zip_url, response.content
 
-    # if __name__ == '__main__':
     Zip_url, data = get_data()
 
     Temp_file = tempfile.TemporaryFile()
@@ -96,9 +88,16 @@ if Ver_local < Ver_server:
     Unzip.close()
     Temp_file.close()
     
-time.sleep(2)
-os.remove('version.txt')
-os.remove('config_new.ini')
-os.system('client.exe')
-os.system('resourcepacks.exe')
-sys.exit(0)
+    time.sleep(2)
+    os.remove('version.txt')
+    os.remove('config_new.ini')
+    os.system('client.exe')
+    os.system('resourcepacks.exe')
+    sys.exit(0)
+
+if int(Ver_local) > int(Ver_server):
+    print("\033[1;31;40mThe version is wrong,please re-dowoload. url:none\033[0m")
+    input("Press Enter to exit.")
+    os.remove('config_new.ini')
+    os.remove('version.txt')
+    sys.exit(1)
