@@ -1,6 +1,7 @@
 mc_clientup.py
 *.zip
 *.bak
+*.ico
 mc_clientup.py
 hmcl.json
 /build
