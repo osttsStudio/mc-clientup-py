@@ -31,13 +31,13 @@ logging.basicConfig(filename='error.log',level=logging.DEBUG,format="%(asctime)s
 
 os.system("") # fixd print's color bug in Win10
 
-Con_res = os.getcwd() + "./config_new.ini"
-bat_res = os.getcwd() + "/.minecraft/update.bat"
-Ver_res = os.getcwd() + "./version.txt"
-Client_res = os.getcwd() + "./client.ini"
-Ver_url = "http://xxx/xxx.txt"
-Con_url = "http://xxx/config.ini"
-Client_url = "http://xxx/client.ini"
+Con_res = os.getcwd() + "./config_new.ini" # config_new.ini--server config file name
+bat_res = os.getcwd() + "/.minecraft/update.bat" # a bat file for updating itself and config, and supports deleting unnecessary files
+Ver_res = os.getcwd() + "./version.txt" # update logs name
+Client_res = os.getcwd() + "./client.ini" # launcher name file
+Ver_url = "http://xxx/version.txt" # update logs
+Con_url = "http://xxx/config.ini" # config file url
+Client_url = "http://xxx/client.ini" # launcher name file url
 
 try:
     request.urlretrieve(Con_url,Con_res)  # download server config file
