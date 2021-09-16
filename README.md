@@ -42,6 +42,7 @@ pyinstaller -F -i xxx.ico xxx.py 封包图标
 
 ## 更新日志
 
+- 2021.09.16 fix：url获取改为读配置文件（仅域名 例：https://bilibili.com/config.ini 配置文件中只写https://bilibili.com，不要加 "/"）
 - 2021.09.01 add：错误日志
 - 2021.08.24 fix：删除无效代码
 - 2021.08.24 add：更改启动器名称读取配置文件，可以修改配置文件自定义名称

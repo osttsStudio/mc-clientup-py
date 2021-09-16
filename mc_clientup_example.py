@@ -1,7 +1,7 @@
 # ====================================================
 
 # Author:狐日泽
-# Version:0.2.4
+# Version:0.2.5
 # name:mc_clientup_py
 
 # 基于python的简单粗暴mc客户端自动更新程序
@@ -31,13 +31,22 @@ logging.basicConfig(filename='error.log',level=logging.DEBUG,format="%(asctime)s
 
 os.system("") # fixd print's color bug in Win10
 
+# load local config
+con = ConfigParser()
+con_path = os.path.join(os.path.abspath('.'),'config.ini') # config.ini--local config file name
+con.read(con_path)
+Url_server = con.get('url','server')
 Con_res = os.getcwd() + "./config_new.ini" # config_new.ini--server config file name
 bat_res = os.getcwd() + "/.minecraft/update.bat" # a bat file for updating itself and config, and supports deleting unnecessary files
 Ver_res = os.getcwd() + "./version.txt" # update logs name
 Client_res = os.getcwd() + "./client.ini" # launcher name file
-Ver_url = "http://xxx/version.txt" # update logs
-Con_url = "http://xxx/config.ini" # config file url
-Client_url = "http://xxx/client.ini" # launcher name file url
+Ver_url = Url_server + "/version.txt" # update logs
+Con_url = Url_server + "/config.ini" # config file url
+Client_url = Url_server + "/client.ini" # launcher name file url
+
+# Ver_url = "http://xxx/version.txt" # update logs
+# Con_url = "http://xxx/config.ini" # config file url
+# Client_url = "http://xxx/client.ini" # launcher name file url
 
 try:
     request.urlretrieve(Con_url,Con_res)  # download server config file
@@ -45,11 +54,6 @@ try:
 
 except:
     logging.debug(traceback.format_exc())
-
-# load local config
-con = ConfigParser()
-con_path = os.path.join(os.path.abspath('.'),'config.ini') # config.ini--local config file name
-con.read(con_path)
 
 try:
     if not os.path.exists(con_path):
@@ -80,7 +84,7 @@ The client.ini download is successful, if the launcher name is not the default�
         input("Press Enter to exit.")
         os.remove('version.txt')
         os.remove('config_new.ini')
-        sys.exit()
+        sys.exit('config.ini download is successful')
 except:
     logging.debug(traceback.format_exc())
 
@@ -97,7 +101,7 @@ try:
         os.system(Client)
         os.remove('version.txt')
         os.remove('config_new.ini')
-        sys.exit()
+        sys.exit(f'start {Client} is successful')
 
 except:
     logging.debug(traceback.format_exc())
@@ -107,12 +111,12 @@ try:
 
         with open(r"version.txt", encoding="utf-8") as file:
             print(file.read())
-            print('更新程序版本：0.2.4')
+            print('更新程序版本：0.2.5')
             print(f"目前MC版本：{Mc_local}  最新MC版本：{Mc_server}")
             print("\033[5;36;40mDownloading...Please wait.\033[0m")
 
         def get_data():
-            Zip_url = "http://xxx/xxx.zip"
+            Zip_url = Url_server + "/files/chii-update.zip"
             response = requests.get(Zip_url)
             return Zip_url, response.content
 
@@ -134,7 +138,7 @@ try:
         os.system('resourcepacks.exe')
         os.system(Client)
         os.remove('config_new.ini')
-        sys.exit()
+        sys.exit('update is successful')
 
 except:
     logging.debug(traceback.format_exc())
