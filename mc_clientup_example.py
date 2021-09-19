@@ -136,18 +136,18 @@ try:
         # with open(Zip_res,"wb") as file:
         #     file.write(ZIP.content)
         
-    Unzip = zipfile.ZipFile("./chii-update.zip", mode='r')
-    for names in Unzip.namelist():
-        Unzip.extract(names, './.minecraft')  # unzip to .minecraft
-    Unzip.close()
+        Unzip = zipfile.ZipFile("./chii-update.zip", mode='r')
+        for names in Unzip.namelist():
+            Unzip.extract(names, './.minecraft')  # unzip to .minecraft
+        Unzip.close()
 
-    time.sleep(2)
-    os.remove('version.txt')
-    os.remove('chii-update.zip')
-    os.system('resourcepacks.exe')
-    os.system(Client)
-    os.remove('config_new.ini')
-    sys.exit('update is successful')
+        time.sleep(2)
+        os.remove('version.txt')
+        os.remove('chii-update.zip')
+        os.system('resourcepacks.exe')
+        os.system(Client)
+        os.remove('config_new.ini')
+        sys.exit('update is successful')
 
 except:
     logging.debug(traceback.format_exc())
