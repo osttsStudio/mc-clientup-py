@@ -1,27 +1,11 @@
-# ====================================================
-
-# Author:狐日泽
-# Version:0.2.5
-# name:mc_clientup_py
-
-# 基于python的简单粗暴mc客户端自动更新程序
-# 程序会下载服务器配置文件并和本地配置文件进行比对
-# 如果版本号大于本地文件，会自动下载更新包并解压覆盖，然后删除服务器配置文件
-
-# Simple and rude mc client automatic update program based on python.
-# The program will download the server configuration file and compare it with the local configuration file.
-# If the version number is greater than the local file, the update package will be automatically downloaded and decompressed and overwritten, and then the server configuration file will be deleted.
-
-# ====================================================
-
 import os
 import sys
 import time
 import zipfile
 import logging
-import requests
 import tempfile
 import traceback
+import urllib.request
 from urllib import request
 from configparser import ConfigParser
 
@@ -107,48 +91,63 @@ except:
     logging.debug(traceback.format_exc())
 
 try:
-    if int(Ver_local) < int(Ver_server):
+    if int(Ver_local) != int(Ver_server):
 
         with open(r"version.txt", encoding="utf-8") as file:
             print(file.read())
-            print('更新程序版本：0.2.5')
+            print('更新程序版本：0.2.6')
             print(f"目前MC版本：{Mc_local}  最新MC版本：{Mc_server}")
-            print("\033[5;36;40mDownloading...Please wait.\033[0m")
+            print("""\n\033[5;36;40mDownloading...Please wait.\033[0m\n""")
 
-        def get_data():
-            Zip_url = Url_server + "/files/chii-update.zip"
-            response = requests.get(Zip_url)
-            return Zip_url, response.content
+        # ===old download code===
+        # def get_data():
+        #     Zip_url = Url_server + "/files/chii-update.zip"
+        #     response = requests.get(Zip_url)
+        #     return Zip_url, response.content
 
-        Zip_url, data = get_data()
+        # Zip_url, data = get_data()
 
-        Temp_file = tempfile.TemporaryFile()
+        # Temp_file = tempfile.TemporaryFile()
 
-        Temp_file.write(data)
+        # Temp_file.write(data)
 
-        Unzip = zipfile.ZipFile(Temp_file, mode='r')
-        for names in Unzip.namelist():
-            Unzip.extract(names, './.minecraft')  # unzip to .minecraft
+        # Unzip = zipfile.ZipFile(Temp_file, mode='r')
+        # for names in Unzip.namelist():
+        #     Unzip.extract(names, './.minecraft')  # unzip to .minecraft
 
-        Unzip.close()
-        Temp_file.close()
-    
-        time.sleep(2)
-        os.remove('version.txt')
-        os.system('resourcepacks.exe')
-        os.system(Client)
-        os.remove('config_new.ini')
-        sys.exit('update is successful')
+        # Unzip.close()
+        # Temp_file.close()
+        # ========================
 
-except:
-    logging.debug(traceback.format_exc())
+        def report(blocknum, blocksize, totalsize):
+            readsofar = blocknum * blocksize
+            if totalsize > 0:
+                percent = readsofar * 1e2 / totalsize
+                s = "\r%5.1f%% %*d / %d" % (percent, len(str(totalsize)), readsofar, totalsize)
+                sys.stderr.write(s)
+                if readsofar >= totalsize:
+                    sys.stderr.write("\n")
+            else: # total size is unknown
+                sys.stderr.write("read %d\n" % (readsofar,))
 
-try:
-    if int(Ver_local) > int(Ver_server):
-        print("\033[1;31;40mThe version is wrong,please re-dowoload. url:none\033[0m")
-        input("Press Enter to exit.")
-        os.remove('config_new.ini')
-        os.remove('version.txt')
-        sys.exit('version error')
+        Zip_url = Url_server + "/files/chii-update.zip"
+        urllib.request.urlretrieve(Zip_url,"./chii-update.zip",report)
+        # ZIP = requests.get(Zip_url)
+        # with open(Zip_res,"wb") as file:
+        #     file.write(ZIP.content)
+        
+    Unzip = zipfile.ZipFile("./chii-update.zip", mode='r')
+    for names in Unzip.namelist():
+        Unzip.extract(names, './.minecraft')  # unzip to .minecraft
+    Unzip.close()
+
+    time.sleep(2)
+    os.remove('version.txt')
+    os.remove('chii-update.zip')
+    os.system('resourcepacks.exe')
+    os.system(Client)
+    os.remove('config_new.ini')
+    sys.exit('update is successful')
+
 except:
     logging.debug(traceback.format_exc())
