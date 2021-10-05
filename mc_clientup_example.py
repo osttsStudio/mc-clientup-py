@@ -9,7 +9,8 @@ import urllib.request
 from urllib import request
 from configparser import ConfigParser
 
-os.remove('error.log') # del old log file
+if os.path.exists('error.log'):
+    os.remove('error.log') # del old log file
 
 logging.basicConfig(filename='error.log',level=logging.DEBUG,format="%(asctime)s - %(pathname)s - %(message)s",datefmt="%Y/%m/%d %H:%M:%S")
 
@@ -112,7 +113,7 @@ try:
 
         with open(r"version.txt", encoding="utf-8") as file:
             print(file.read())
-            print(f"目前版本：0.2.7  最新版本：{Code_server}")
+            print(f"目前版本：0.2.7-fix1  最新版本：{Code_server}")
             print(f"目前MC版本：{Mc_local}  最新MC版本：{Mc_server}")
             print("""\n\033[5;36;40mDownloading...Please wait.\033[0m\n""")
 
